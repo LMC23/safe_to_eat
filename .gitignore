@@ -1,0 +1,8 @@
+secrets.md
+flask_api/env
+frontend/node_modules
+node_api/node_modules
+node_api/.env
+frontend/.env
+flask_api/.env
+__pycache__
