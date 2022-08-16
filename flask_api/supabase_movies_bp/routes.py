@@ -8,4 +8,7 @@ def create_show():
             "title": "Sandman"
     }
 
+# @supabase_bp.route("/movie", methods=["GET"])
+# def return_movie():
+#         return {"test": "this is a movie"}
 
