@@ -30,6 +30,7 @@ export default function Signup() {
       <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column'}}>
         <div>{error && JSON.stringify(error)}</div>
 
+        
         <label htmlFor="input-email">Email</label>
         <input id="input-email" type="email" ref={emailRef} />
 
