@@ -11,6 +11,7 @@ import { PrivateRoute } from "./components/PrivateRoute";
 // https://reactrouter.com/docs/en/v6/components/routes
 // https://supabase.com/blog/supabase-js-v2
 // https://github.com/ruanmartinelli/supabase-auth-react/blob/main/src/components/Signup.js
+// https://www.hyperui.dev/components/application-ui/side-menu
 
 function App() {
 
