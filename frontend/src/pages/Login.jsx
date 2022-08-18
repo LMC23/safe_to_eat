@@ -38,7 +38,7 @@ export default function Login() {
             sunt dolores deleniti inventore quaerat mollitia?
           </p>
 
-          <form action="" className="p-8 mt-6 mb-0 space-y-4 rounded-lg shadow-2xl bg-gray-300 text-indigo-700">
+          <form onSubmit={handleSubmit} className="p-8 mt-6 mb-0 space-y-4 rounded-lg shadow-2xl bg-gray-300 text-indigo-700">
             <p className="text-lg font-medium">Sign in to your account</p>
 
             <div>
@@ -52,6 +52,7 @@ export default function Login() {
                   id="email"
                   className="w-full p-4 pr-12 text-sm border-gray-200 rounded-lg shadow-sm"
                   placeholder="Enter email"
+                  ref={emailRef}
                 />
 
                 <span className="absolute inset-y-0 inline-flex items-center right-4">
@@ -84,6 +85,7 @@ export default function Login() {
                   id="password"
                   className="w-full p-4 pr-12 text-sm border-gray-200 rounded-lg shadow-sm"
                   placeholder="Enter password"
+                  ref={passwordRef}
                 />
 
                
