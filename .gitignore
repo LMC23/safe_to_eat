@@ -6,3 +6,4 @@ node_api/.env
 frontend/.env
 flask_api/.env
 __pycache__
+.env
