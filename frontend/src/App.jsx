@@ -5,6 +5,7 @@ import { PrivateRoute } from "./components/PrivateRoute";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
 import SignUp from "./pages/Signup";
+import DefaultLayout from "./components/DefaultLayout";
 
 // https://reactrouter.com/docs/en/v6/components/routes
 // https://supabase.com/blog/supabase-js-v2
@@ -21,9 +22,12 @@ function App() {
           <Route
             path="/"
             element={
-              <PrivateRoute>
+
+              <DefaultLayout>
+
                 <HomePage />
-              </PrivateRoute>
+              </DefaultLayout>
+
             }
           />
           <Route path="login" element={<Login />} />
