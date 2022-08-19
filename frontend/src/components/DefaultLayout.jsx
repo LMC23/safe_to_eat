@@ -1,7 +1,9 @@
+
 import Footer from "./Footer";
 import NavBar from "./Navbar";
 
 export default function DefaultLayout({ children }) {
+
     const loading = false;
     return (
         <div className="bg-gradient-to-r from-gray-800 to-purple-900 transition-colors duration-200 ">
