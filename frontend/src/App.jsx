@@ -12,6 +12,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import { StoreProvider } from "./contexts/Store";
+import SafeToEat from "./pages/SafeToEat";
 // https://reactrouter.com/docs/en/v6/components/routes
 // https://supabase.com/blog/supabase-js-v2
 // https://github.com/ruanmartinelli/supabase-auth-react/blob/main/src/components/Signup.js
@@ -41,6 +42,7 @@ function App() {
               />
               <Route path="login" element={<Login />} />
               <Route path="signup" element={<SignUp />} />
+              <Route path="safe2eat" element={<DefaultLayout><SafeToEat /></DefaultLayout>} />
               <Route path="/show/:type/:id" element={<DefaultLayout><Show /></DefaultLayout>} />
             </Routes>
           </BrowserRouter>

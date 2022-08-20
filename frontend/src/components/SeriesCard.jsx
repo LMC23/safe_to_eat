@@ -19,7 +19,7 @@ export default function SeriesCard({ series, isOnTmdb }) {
                 </div>
                 <p className="font-normal text-gray-700 mb-3 dark:text-gray-200">
                     {
-                        series.overview > 200
+                        series.overview.length > 200
                             ? `${series.overview.substring(0, 200)}...`
                             : series.overview
                     }

@@ -81,12 +81,21 @@ export default function Show() {
                     {data.tmdb_response.overview}
                 </p>
             </div>
-            {data.tmdb_response?.release_date && <div className="flex gap-2 mt-4 text-justify">
-                <span className="text-yellow-400 w-32 block font-bold">Release Date:</span>
-                <p className="text-gray-100 font-light italic w-full" >
-                    {data.tmdb_response.release_date}
-                </p>
-            </div>
+            {
+                data.tmdb_response?.release_date && <div className="flex gap-2 mt-4 text-justify">
+                    <span className="text-yellow-400 w-32 block font-bold">Release Date:</span>
+                    <p className="text-gray-100 font-light italic w-full" >
+                        {data.tmdb_response.release_date}
+                    </p>
+                </div>
+            }
+            {
+                data.tmdb_response?.vote_average && <div className="flex gap-2 mt-4 text-justify">
+                    <span className="text-yellow-400 w-32 block font-bold">TMDB Score:</span>
+                    <p className="text-gray-100 font-light italic w-full" >
+                        {data.tmdb_response.vote_average.toFixed(2)} ({data.tmdb_response.vote_count} votes)
+                    </p>
+                </div>
             }
 
             {data.supabase_response ? '' : <button className="p-4 bg-yellow-300" onClick={addMovieToDb}>Add movie to db</button>}
