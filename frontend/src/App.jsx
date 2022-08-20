@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
 import SignUp from "./pages/Signup";
 import DefaultLayout from "./components/DefaultLayout";
+import Show from "./pages/Show";
 
 // https://reactrouter.com/docs/en/v6/components/routes
 // https://supabase.com/blog/supabase-js-v2
@@ -32,6 +33,7 @@ function App() {
           />
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<SignUp />} />
+          <Route path="/show/:type/:id" element={<DefaultLayout><Show /></DefaultLayout>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

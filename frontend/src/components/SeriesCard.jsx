@@ -7,11 +7,11 @@ export default function SeriesCard({ series, isOnTmdb }) {
     return (
         <Link className="flex flex-col justify-between md:flex-row rounded-lg bg-white hover:bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-900 dark:hover:bg-gray-900 shadow-md items-center my-2"
             style={{ minHeight: 200 }}
-            to={`/show/${series.id}`}
+            to={`/show/series/${series.id}`}
         >
 
             <div className="p-4 flex flex-col justify-between leading-normal w-full">
-                <div class="flex gap-4 justify-between">
+                <div className="flex gap-4 justify-between">
                     <h5 className="text-white dark:text-dark-accent font-bold text-2xl tracking-tight mb-2">
                         {series.name}
                     </h5>

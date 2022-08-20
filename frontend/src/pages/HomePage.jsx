@@ -3,6 +3,7 @@ import axios from 'axios'
 import MovieCard from "../components/MovieCard";
 import SeriesCard from "../components/SeriesCard";
 import Modal from "../components/Modal";
+import Pagination from "../components/Pagination";
 
 const IMG_PATH = 'https://image.tmdb.org/t/p/w500'
 
@@ -13,7 +14,6 @@ export default function Discover() {
   const [type, setType] = useState('movies');
   const [search, setSearch] = useState('');
   const [isSearched, setIsSearched] = useState(false);
-  // const [showModal, setShowModal] = useState(true);
 
   const usedTmdbIds = supabaseShows.map(item => item.tmdb_id)
 
@@ -60,7 +60,6 @@ export default function Discover() {
 
   return (
     <div>
-      {/* <Modal showModal={showModal} /> */}
       <div className="relative">
         <input
           type="text"
@@ -92,16 +91,22 @@ export default function Discover() {
           Series
         </button>
       </div>
-      {type === 'movies' ? <div>
+      {type === 'movies' ? <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {movies.map(movie => {
           return <MovieCard movie={movie} key={movie.id} isOnTmdb={usedTmdbIds.includes(movie.id)} />
         })}
-      </div> : <div>
+      </div> : <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {series.map(s => {
           return <SeriesCard series={s} key={s.id} isOnTmdb={usedTmdbIds.includes(s.id)} />
         })}
       </div>}
-
+      <Pagination
+        postsPerPage={20}
+        totalPosts={73}
+        paginateBack={() => console.log('back')}
+        paginateFront={() => console.log('front')}
+        currentPage={1}
+      />
     </div >
   );
 }
