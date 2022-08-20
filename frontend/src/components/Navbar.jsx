@@ -4,7 +4,6 @@ import { useAuth } from "../contexts/Auth";
 export default function NavBar() {
 
     const { user, signOut } = useAuth();
-    console.log(user);
 
     const routes = [
         {
