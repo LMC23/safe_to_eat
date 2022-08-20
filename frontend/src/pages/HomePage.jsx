@@ -2,61 +2,44 @@ import { useEffect, useState } from "react";
 import axios from 'axios'
 import MovieCard from "../components/MovieCard";
 import SeriesCard from "../components/SeriesCard";
-import Modal from "../components/Modal";
 import Pagination from "../components/Pagination";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import Loader from "../components/Loader";
 
-const IMG_PATH = 'https://image.tmdb.org/t/p/w500'
+
+const fetchHomePageData = (search) => {
+  const movieUrl = search !== '' ? `/tmdb/search/movie?query=${search}&page=1` : '/tmdb/list/movie?page=1'
+  const seriesUrl = search !== '' ? `/tmdb/search/series?query=${search}&page=1` : '/tmdb/list/series?page=1'
+
+  return Promise.all([
+    axios.get(import.meta.env.VITE_API_URL + movieUrl).then(res => res.data),
+    axios.get(import.meta.env.VITE_API_URL + seriesUrl).then(res => res.data),
+    axios.get(import.meta.env.VITE_API_URL + '/supabase/list').then(res => res.data)
+  ])
+}
 
 export default function Discover() {
-  const [movies, setMovies] = useState([]);
-  const [series, setSeries] = useState([]);
-  const [supabaseShows, setSupabaseShows] = useState([]);
+
   const [type, setType] = useState('movies');
-  const [search, setSearch] = useState('');
-  const [isSearched, setIsSearched] = useState(false);
+  const [searchInputValue, setSearchInputValue] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const queryClient = useQueryClient()
 
-  const usedTmdbIds = supabaseShows.map(item => item.tmdb_id)
+  const { isLoading, error, data, isFetching } = useQuery(["homePageData", searchTerm], () => fetchHomePageData(searchTerm));
 
-  const getMovies = async () => {
-    try {
-      const endUrl = search !== '' ? `/tmdb/search/movie?query=${search}&page=1` : '/tmdb/list/movie?page=1'
-      const result = await axios.get(import.meta.env.VITE_API_URL + endUrl)
-      setMovies(result.data.results);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  if (isLoading) return <Loader />;
 
-  const getSeries = async () => {
-    try {
-      const endUrl = search !== '' ? `/tmdb/search/series?query=${search}&page=1` : '/tmdb/list/series?page=1'
-      const result = await axios.get(import.meta.env.VITE_API_URL + endUrl)
-      setSeries(result.data.results);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  const getSupabaseShows = async () => {
-    try {
-      const result = await axios.get(`${import.meta.env.VITE_API_URL}/supabase/list`)
-      setSupabaseShows(result.data.data);
-      console.log(result.data)
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  if (error) return "An error has occurred: " + error.message;
+
+  const [moviesData, seriesData, supabaseData] = data;
+
+  const usedTmdbIds = supabaseData.data.map(item => item.tmdb_id)
+
+
 
   function handleSearch() {
-    getMovies();
-    getSeries();
-    getSupabaseShows();
+    setSearchTerm(searchInputValue);
   }
-
-  useEffect(() => {
-    handleSearch();
-
-
-  }, [isSearched])
 
   return (
     <div>
@@ -66,7 +49,8 @@ export default function Discover() {
           id="rounded-email"
           className=" rounded-lg border-transparent flex-1 appearance-none border bg-gray-100 border-gray-300 dark:bg-gray-800 dark:border-gray-900 dark:text-gray-100 w-full py-2 px-4 text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:border-transparent"
           placeholder="Today i feel like eating to..."
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => setSearchInputValue(e.target.value)}
+          value={searchInputValue}
         />
         <button className="absolute right-2 top-3 hover:opacity-50 text-gray-100 dark:text-dark-accent" onClick={handleSearch}>
           <svg
@@ -92,11 +76,11 @@ export default function Discover() {
         </button>
       </div>
       {type === 'movies' ? <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {movies.map(movie => {
+        {moviesData.results.map(movie => {
           return <MovieCard movie={movie} key={movie.id} isOnTmdb={usedTmdbIds.includes(movie.id)} />
         })}
       </div> : <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {series.map(s => {
+        {seriesData.results.map(s => {
           return <SeriesCard series={s} key={s.id} isOnTmdb={usedTmdbIds.includes(s.id)} />
         })}
       </div>}
