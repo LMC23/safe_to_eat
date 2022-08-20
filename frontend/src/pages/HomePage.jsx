@@ -5,6 +5,7 @@ import SeriesCard from "../components/SeriesCard";
 import Pagination from "../components/Pagination";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Loader from "../components/Loader";
+import { useStore } from "../contexts/Store";
 
 
 const fetchHomePageData = (search) => {
@@ -22,8 +23,11 @@ export default function Discover() {
 
   const [type, setType] = useState('movies');
   const [searchInputValue, setSearchInputValue] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const queryClient = useQueryClient()
+  const { searchTerm, setSearchTerm } = useStore()
+
+  useEffect(() => {
+    setSearchInputValue(searchTerm);
+  }, [])
 
   const { isLoading, error, data, isFetching } = useQuery(["homePageData", searchTerm], () => fetchHomePageData(searchTerm));
 
@@ -37,13 +41,14 @@ export default function Discover() {
 
 
 
-  function handleSearch() {
+  function handleSearch(e) {
+    e.preventDefault();
     setSearchTerm(searchInputValue);
   }
 
   return (
     <div>
-      <div className="relative">
+      <form className="relative" onSubmit={handleSearch}>
         <input
           type="text"
           id="rounded-email"
@@ -52,7 +57,7 @@ export default function Discover() {
           onChange={(e) => setSearchInputValue(e.target.value)}
           value={searchInputValue}
         />
-        <button className="absolute right-2 top-3 hover:opacity-50 text-gray-100 dark:text-dark-accent" onClick={handleSearch}>
+        <button type="submit" className="absolute right-2 top-3 hover:opacity-50 text-gray-100 dark:text-dark-accent" >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"
@@ -66,12 +71,12 @@ export default function Discover() {
             />
           </svg>
         </button>
-      </div>
-      <div className="inline-flex rounded-md shadow-sm py-8" role="group">
-        <button onClick={() => setType('movies')} type="button" className={`py-2 px-4 text-sm   ${type === 'movies' ? 'bg-red-900' : 'bg-gray-700'}`}>
+      </form>
+      <div className="flex items-center gap-10 rounded-md shadow-sm py-8" role="group">
+        <button onClick={() => setType('movies')} type="button" className={`py-2 px-4 text-sm rounded w-40 hover:opacity-90 ${type === 'movies' ? 'bg-yellow-300' : 'bg-gray-200'}`}>
           Movies
         </button>
-        <button onClick={() => setType('series')} type="button" className={`py-2 px-4 text-sm   ${type === 'series' ? 'bg-red-900' : 'bg-gray-700'}`}>
+        <button onClick={() => setType('series')} type="button" className={`py-2 px-4 text-sm rounded w-40 hover:opacity-90 ${type === 'series' ? 'bg-yellow-300' : 'bg-gray-200'}`}>
           Series
         </button>
       </div>

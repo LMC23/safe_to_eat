@@ -11,6 +11,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import { StoreProvider } from "./contexts/Store";
 // https://reactrouter.com/docs/en/v6/components/routes
 // https://supabase.com/blog/supabase-js-v2
 // https://github.com/ruanmartinelli/supabase-auth-react/blob/main/src/components/Signup.js
@@ -24,24 +25,26 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route
-              path="/"
-              element={
+        <StoreProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route
+                path="/"
+                element={
 
-                <DefaultLayout>
+                  <DefaultLayout>
 
-                  <HomePage />
-                </DefaultLayout>
+                    <HomePage />
+                  </DefaultLayout>
 
-              }
-            />
-            <Route path="login" element={<Login />} />
-            <Route path="signup" element={<SignUp />} />
-            <Route path="/show/:type/:id" element={<DefaultLayout><Show /></DefaultLayout>} />
-          </Routes>
-        </BrowserRouter>
+                }
+              />
+              <Route path="login" element={<Login />} />
+              <Route path="signup" element={<SignUp />} />
+              <Route path="/show/:type/:id" element={<DefaultLayout><Show /></DefaultLayout>} />
+            </Routes>
+          </BrowserRouter>
+        </StoreProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
