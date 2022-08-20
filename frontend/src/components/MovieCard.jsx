@@ -5,12 +5,12 @@ const IMG_PATH = 'https://image.tmdb.org/t/p/w500'
 export default function MovieCard({ movie, isOnTmdb }) {
 
     return (
-        <Link className="flex flex-col md:flex-row rounded-lg bg-white hover:bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-900 dark:hover:bg-gray-900 shadow-md items-center my-2"
+        <Link className="flex flex-col md:flex-row rounded-lg bg-white hover:bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-900 dark:hover:bg-gray-600 shadow-md items-center my-2 pl-2"
             style={{ minHeight: 200 }}
             to={`/show/movie/${movie.id}`}
         >
             <img
-                className="h-auto object-cover md:w-48 rounded-t-lg md:rounded-none md:rounded-l-lg"
+                className="h-auto object-cover md:w-48"
                 src={IMG_PATH + movie.poster_path}
                 alt={movie.name}
                 style={{ maxWidth: 128 }}

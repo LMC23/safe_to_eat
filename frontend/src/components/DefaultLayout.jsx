@@ -6,7 +6,7 @@ export default function DefaultLayout({ children }) {
 
     const loading = false;
     return (
-        <div className="bg-gradient-to-r from-gray-800 to-purple-900 transition-colors duration-200 ">
+        <div className="bg-gradient-to-r bg-gray-900 transition-colors duration-200 ">
             <div className="max-w-7xl mx-auto flex flex-col md:flex-row min-h-screen pb-2">
                 {loading && <Loader />}
                 <div className="w-full md:w-3/12">

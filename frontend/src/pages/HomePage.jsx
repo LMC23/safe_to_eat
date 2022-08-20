@@ -73,10 +73,10 @@ export default function Discover() {
         </button>
       </form>
       <div className="flex items-center gap-10 rounded-md shadow-sm py-8" role="group">
-        <button onClick={() => setType('movies')} type="button" className={`py-2 px-4 text-sm rounded w-40 hover:opacity-90 ${type === 'movies' ? 'bg-yellow-300' : 'bg-gray-200'}`}>
+        <button onClick={() => setType('movies')} type="button" className={`py-2 px-4 text-sm rounded w-40 hover:opacity-90 ${type === 'movies' ? 'bg-yellow-300 font-bold' : 'bg-gray-200'}`}>
           Movies
         </button>
-        <button onClick={() => setType('series')} type="button" className={`py-2 px-4 text-sm rounded w-40 hover:opacity-90 ${type === 'series' ? 'bg-yellow-300' : 'bg-gray-200'}`}>
+        <button onClick={() => setType('series')} type="button" className={`py-2 px-4 text-sm rounded w-40 hover:opacity-90 ${type === 'series' ? 'bg-yellow-300 font-bold' : 'bg-gray-200'}`}>
           Series
         </button>
       </div>
