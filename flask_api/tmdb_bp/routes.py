@@ -2,6 +2,8 @@ from flask import Blueprint, request
 from dotenv import dotenv_values
 import requests
 
+from lib.supabase import supabase
+
 # global "routes.py" variables
 
 config = dotenv_values(".env")
@@ -89,3 +91,25 @@ def search(type):
     except Exception as e:
         error = str(e)
         return {"error":error}, 500
+
+@tmdb_bp.route("/<type>/<id>", methods=["GET"])
+def get_show_by_id(type, id):
+    try:
+        if type == "movie":
+            tmdb_api = f"{BASE_URL}/movie/{id}?api_key={API_KEY}"
+        elif type == "series":
+            tmdb_api = f"{BASE_URL}/tv/{id}?api_key={API_KEY}"
+        else:
+            return {"error": "Type must be movie or series"}, 400
+
+        tmdb_response = fetch_tmdb(tmdb_api)
+
+        supabase_response = supabase.table("movies").select("*").eq('tmdb_id', id).execute()
+        print(supabase_response)
+        return {"tmdb_response":tmdb_response,
+                "supabase_response": supabase_response.data[0] if len(supabase_response.data) > 0 else None
+                }
+
+    except Exception as e:
+        error = str(e)
+        return {"error":error}

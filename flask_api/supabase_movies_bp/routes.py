@@ -2,6 +2,7 @@ from flask import Blueprint, request
 from lib.middleware import token_required
 from lib.supabase import supabase
 
+# https://supabase.com/docs/guides/client-libraries
 supabase_bp = Blueprint("supabase_bp", __name__)
 
 @supabase_bp.route("/add_show", methods=["POST"])
@@ -23,3 +24,5 @@ def return_shows():
     except Exception as e:
         error = str(e)
         return {"error": error}
+
+
