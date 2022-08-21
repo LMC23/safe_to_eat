@@ -25,6 +25,17 @@ def fetch_tmdb(tmdb_api):
 
     return response
 
+def fetch_show_by_type_id(type, id):
+    if type == "movie":
+        tmdb_api = f"{BASE_URL}/movie/{id}?api_key={API_KEY}"
+    elif type == "series":
+        tmdb_api = f"{BASE_URL}/tv/{id}?api_key={API_KEY}"
+    else:
+        return {"error": "Type must be movie or series"}, 400
+
+    tmdb_response = fetch_tmdb(tmdb_api)
+    return tmdb_response
+
 # 1/Shows most popular movies/series
 
 @tmdb_bp.route("/list/<type>", methods=["GET"])
@@ -119,17 +130,11 @@ def get_credits(type, id):
 @tmdb_bp.route("/<type>/<id>", methods=["GET"])
 def get_show_by_id(type, id):
     try:
-        if type == "movie":
-            tmdb_api = f"{BASE_URL}/movie/{id}?api_key={API_KEY}"
-        elif type == "series":
-            tmdb_api = f"{BASE_URL}/tv/{id}?api_key={API_KEY}"
-        else:
-            return {"error": "Type must be movie or series"}, 400
+        
+        tmdb_response = fetch_show_by_type_id(type, id)
 
-        tmdb_response = fetch_tmdb(tmdb_api)
-
-        supabase_response = supabase.table("movies").select("*").eq('tmdb_id', id).execute()
-        print(supabase_response)
+        supabase_response = supabase.table("movies").select("*, votes(*)").eq('tmdb_id', id).execute()
+        
         return {"tmdb_response":tmdb_response,
                 "supabase_response": supabase_response.data[0] if len(supabase_response.data) > 0 else None
                 }
