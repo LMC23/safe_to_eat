@@ -13,6 +13,7 @@ def token_required(f):
         try:
             payload = verify_token(token)
             request.payload = payload
+            request.token = token
             return f(*args, **kwargs)
         except Exception as e:
             if "expired" in str(e):

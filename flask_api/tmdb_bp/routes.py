@@ -2,6 +2,8 @@ from flask import Blueprint, request
 from dotenv import dotenv_values
 import requests
 
+from lib.supabase import supabase
+
 # global "routes.py" variables
 
 config = dotenv_values(".env")
@@ -10,12 +12,24 @@ API_KEY = config.get("API_KEY")
 
 tmdb_bp = Blueprint("tmdb_bp", __name__)
 
+
 def fetch_tmdb(tmdb_api):
     '''Takes the tmdb url and returns the response from the TMDB API'''
     r = requests.get(tmdb_api)
     response = r.json()
 
     return response
+
+def fetch_show_by_type_id(type, id):
+    if type == "movie":
+        tmdb_api = f"{BASE_URL}/movie/{id}?api_key={API_KEY}"
+    elif type == "series":
+        tmdb_api = f"{BASE_URL}/tv/{id}?api_key={API_KEY}"
+    else:
+        return {"error": "Type must be movie or series"}, 400
+
+    tmdb_response = fetch_tmdb(tmdb_api)
+    return tmdb_response
 
 # 1/Shows most popular movies/series
 
@@ -89,3 +103,38 @@ def search(type):
     except Exception as e:
         error = str(e)
         return {"error":error}, 500
+
+# Get the Credits of the movie
+
+@tmdb_bp.route("/credits/<type>/<id>")
+def get_credits(type, id):
+    try:
+        if type == "movie":
+            tmdb_api = f"{BASE_URL}/movie/{id}/credits?api_key={API_KEY}"
+        elif type == "series":
+            tmdb_api = f"{BASE_URL}/tv/{id}/credits?api_key={API_KEY}"
+        else:
+            return {"error": "Type must be movie or series"}, 400
+
+        return fetch_tmdb(tmdb_api)
+
+    except Exception as e:
+        error = str(e)
+        return {"error": error}
+
+@tmdb_bp.route("/<type>/<id>", methods=["GET"])
+def get_show_by_id(type, id):
+    try:
+        
+        tmdb_response = fetch_show_by_type_id(type, id)
+
+        supabase_response = supabase.table("movies").select("*, votes(*), comments(*)").eq('tmdb_id', id).execute()
+        
+        return {
+            "tmdb_response":tmdb_response,
+            "supabase_response": supabase_response.data[0] if len(supabase_response.data) > 0 else None
+        }
+
+    except Exception as e:
+        error = str(e)
+        return {"error":error}
