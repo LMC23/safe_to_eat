@@ -4,11 +4,10 @@ import NavBar from "./Navbar";
 
 export default function DefaultLayout({ children }) {
 
-    const loading = false;
     return (
-        <div className="bg-gradient-to-r bg-gray-900 transition-colors duration-200 ">
+        <div className="bg-gray-900 transition-colors duration-200 ">
             <div className="max-w-7xl mx-auto flex flex-col md:flex-row min-h-screen pb-2">
-                {loading && <Loader />}
+
                 <div className="w-full md:w-3/12">
                     <div
                         className="flex items-center justify-start flex-row mx-auto md:flex-col lg:flex-row lg:mx-6 mt-10 w-52"

@@ -1,7 +1,7 @@
 export default function Footer() {
     return (<>
         <footer
-            className=" text-gray-100 flex justify-center -mt-12  bg-gradient-to-r from-fuchsia-800 via-purple-900 to-pink-400 py-3 px-10 mx-auto max-w-3xl lg:max-w-7xl -mb-4 rounded-t-lg text-center"
+            className=" text-gray-100 flex justify-center -mt-12 py-3 px-10 mx-auto max-w-3xl lg:max-w-7xl -mb-4 rounded-t-lg text-center"
         >
             <p>
                 ©2022 Made with ❤ by {" "}
@@ -15,7 +15,7 @@ export default function Footer() {
                 <a
                     className="font-bold text-yellow-300"
                     target="_blank"
-                    href="https://twitter.com/MihaiAdrianAnd1"
+                    href="https://twitter.com/CristinaLapusn2"
                 >Lapusneanu Maria Cristina</a
                 >
             </p>

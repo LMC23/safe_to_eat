@@ -6,13 +6,11 @@ import { motion } from "framer-motion"
 import { Link } from "react-router-dom";
 
 const fetchSafeToEat = () => {
-
     return axios.get(import.meta.env.VITE_API_URL + '/supabase/list').then(res => res.data)
-
 }
 
 export default function SafeToEat() {
-    const { isLoading, error, data } = useQuery(["safeToEatData"], fetchSafeToEat);
+    const { isLoading, error, data } = useQuery(["fetchSupabase"], fetchSafeToEat);
 
     if (isLoading) return <Loader />;
 

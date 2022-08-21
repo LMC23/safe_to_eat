@@ -15,9 +15,12 @@ const fetchHomePageData = (search) => {
 
   return Promise.all([
     axios.get(import.meta.env.VITE_API_URL + movieUrl).then(res => res.data),
-    axios.get(import.meta.env.VITE_API_URL + seriesUrl).then(res => res.data),
-    axios.get(import.meta.env.VITE_API_URL + '/supabase/list').then(res => res.data)
+    axios.get(import.meta.env.VITE_API_URL + seriesUrl).then(res => res.data)
   ])
+}
+
+const fetchSupabase = () => {
+  return axios.get(import.meta.env.VITE_API_URL + '/supabase/list').then(res => res.data)
 }
 
 export default function Discover() {
@@ -30,15 +33,16 @@ export default function Discover() {
     setSearchInputValue(searchTerm);
   }, [])
 
-  const { isLoading, error, data, isFetching } = useQuery(["homePageData", searchTerm], () => fetchHomePageData(searchTerm));
+  const { isLoading, error, data } = useQuery(["homePageData", searchTerm], () => fetchHomePageData(searchTerm));
+  const { isLoading: isLoadingSupabase, error: isErrorSupabase, data: dataSupabase } = useQuery(["fetchSupabase", searchTerm], () => fetchSupabase());
 
-  if (isLoading) return <Loader />;
+  if (isLoading || isLoadingSupabase) return <Loader />;
 
-  if (error) return "An error has occurred: " + error.message;
+  if (error || isErrorSupabase) return "An error has occurred: " + error.message;
 
-  const [moviesData, seriesData, supabaseData] = data;
+  const [moviesData, seriesData] = data;
 
-  const usedTmdbIds = supabaseData.data.map(item => item.tmdb_id)
+  const usedTmdbIds = dataSupabase.data.map(item => item.tmdb_id)
 
 
 
@@ -48,7 +52,7 @@ export default function Discover() {
   }
 
   return (
-    <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}>
+    <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 40 }}>
       <form className="relative" onSubmit={handleSearch}>
         <input
           type="text"
@@ -90,13 +94,13 @@ export default function Discover() {
           return <SeriesCard series={s} key={s.id} isOnTmdb={usedTmdbIds.includes(s.id)} />
         })}
       </div>}
-      <Pagination
+      {/* <Pagination
         postsPerPage={20}
         totalPosts={73}
         paginateBack={() => console.log('back')}
         paginateFront={() => console.log('front')}
         currentPage={1}
-      />
+      /> */}
     </motion.div >
   );
 }
