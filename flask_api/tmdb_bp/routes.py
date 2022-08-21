@@ -14,7 +14,7 @@ tmdb_bp = Blueprint("tmdb_bp", __name__)
 
 # users = supabase.auth.api.list_users()
 # for user in users:
-#     print(user.id, user.email)
+#     print(user.id, user.email, user.user_metadata)
 
 
 def fetch_tmdb(tmdb_api):
