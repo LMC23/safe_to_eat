@@ -12,6 +12,7 @@ API_KEY = config.get("API_KEY")
 
 tmdb_bp = Blueprint("tmdb_bp", __name__)
 
+# https://supabase.com/blog/postgresql-views
 # users = supabase.auth.api.list_users()
 # for user in users:
 #     print(user.id, user.email, user.user_metadata)

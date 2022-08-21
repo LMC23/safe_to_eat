@@ -70,7 +70,6 @@ export default function Show() {
 
     if (error) return "An error has occurred: " + error?.message;
     const [showInfo, castInfo] = data
-    console.log(castInfo)
     return (
         <motion.div className="max-w-[780px] mx-auto" initial={{ opacity: 0, y: -30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }}>
 

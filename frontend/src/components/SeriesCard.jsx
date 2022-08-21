@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-
+import { motion } from "framer-motion"
 const IMG_PATH = 'https://image.tmdb.org/t/p/w500'
 
 export default function SeriesCard({ series, isOnTmdb }) {
@@ -10,7 +10,9 @@ export default function SeriesCard({ series, isOnTmdb }) {
             to={`/show/series/${series.id}`}
         >
 
-            <div className="p-4 flex flex-col justify-between leading-normal w-full">
+            <motion.div initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                close={{ opacity: 0 }} className="p-4 flex flex-col justify-between leading-normal w-full">
                 <div className="flex gap-4 justify-between">
                     <h5 className="text-white dark:text-dark-accent font-bold text-2xl tracking-tight mb-2">
                         {series.name}
@@ -24,8 +26,11 @@ export default function SeriesCard({ series, isOnTmdb }) {
                             : series.overview
                     }
                 </p>
-            </div>
-            <img
+            </motion.div>
+            <motion.img
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                close={{ opacity: 0 }}
                 className="h-auto object-cover md:w-48"
                 src={IMG_PATH + series.poster_path}
                 alt={series.name}

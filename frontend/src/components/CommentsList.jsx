@@ -6,12 +6,18 @@ export default function CommentsList() {
             </p>
             <div
                 v-for="comment in comments"
-                className="border border-gray-400 dark:border-gray-900 dark:bg-gray-900 shadow-md p-4 mb-4"
+                className="shadow-sm shadow-gray-300 p-4 mb-4"
             >
                 <div className="flex justify-end">
                     <span className="text-gray-100">10/07/2022</span>
                 </div>
-                <p className="mt-1 text-gray-100 dark:text-dark-accent">Continut nebun aici</p>
+                <div className="flex items-center gap-4">
+
+                    <div className="inline-flex overflow-hidden relative justify-center items-center w-10 h-10 bg-gray-100 rounded-full dark:bg-gray-600">
+                        <span className="font-medium text-gray-600 dark:text-gray-300">JL</span>
+                    </div>
+                    <p className="mt-1 text-gray-100 dark:text-dark-accent">Continut nebun aici</p>
+                </div>
             </div>
         </div >
     )

@@ -12,9 +12,8 @@ import Profile from "../pages/Profile";
 
 export default function AnimatedRoutes() {
     const location = useLocation();
-    console.log(location);
     return (
-        <AnimatePresence exitBeforeEnter>
+        <AnimatePresence mode='wait'>
             <Routes location={location} key={location.pathname}>
                 <Route
                     path="/"

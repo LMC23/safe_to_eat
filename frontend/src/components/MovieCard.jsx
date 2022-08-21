@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 
 const IMG_PATH = 'https://image.tmdb.org/t/p/w500'
+import { motion } from "framer-motion"
 
 export default function MovieCard({ movie, isOnTmdb }) {
 
@@ -9,14 +10,19 @@ export default function MovieCard({ movie, isOnTmdb }) {
             style={{ minHeight: 200 }}
             to={`/show/movie/${movie.id}`}
         >
-            <img
+            <motion.img
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                close={{ opacity: 0 }}
                 className="h-auto object-cover md:w-48"
                 src={IMG_PATH + movie.poster_path}
                 alt={movie.name}
                 style={{ maxWidth: 128 }}
                 lazy="true"
             />
-            <div className="p-4 flex flex-col justify-between leading-normal">
+            <motion.div initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                close={{ opacity: 0 }} className="p-4 flex flex-col justify-between leading-normal">
                 <div className="flex justify-between">
                     <h5 className="text-white dark:text-dark-accent font-bold text-2xl tracking-tight mb-2">
                         {movie.title}
@@ -30,7 +36,7 @@ export default function MovieCard({ movie, isOnTmdb }) {
                             : movie.overview
                     }
                 </p>
-            </div>
+            </motion.div>
         </Link>
     )
 }
