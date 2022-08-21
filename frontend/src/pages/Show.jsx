@@ -77,7 +77,7 @@ export default function Show() {
             } else {
                 localVotes.dislike += 1;
             }
-            if (user.id === vote.user_id) {
+            if (user?.id === vote.user_id) {
                 localVotes.your_vote = vote.is_safe;
             }
         })

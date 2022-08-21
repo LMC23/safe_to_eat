@@ -7,7 +7,12 @@ export default function Profile() {
     const [username, setUsername] = useState('');
     const { user } = useAuth();
     useEffect(() => {
-        setUsername(user.user_metadata?.username || '')
+        const fetchUser = async () => {
+            const { data } = await supabaseClient.auth.getUser();
+            setUsername(data.user.user_metadata?.username || '')
+        }
+        // setUsername(user.user_metadata?.username || '')
+        fetchUser()
     }, [])
 
     async function saveUsername() {

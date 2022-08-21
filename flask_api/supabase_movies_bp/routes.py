@@ -1,9 +1,12 @@
 from flask import Blueprint, request
+from random_username.generate import generate_username
+import requests
+
 from lib.middleware import token_required
-from lib.supabase import supabase
+from lib.supabase import supabase, SUPABASE_KEY, SUPABASE_URL
 from tmdb_bp.routes import fetch_show_by_type_id
 
-# https://supabase.com/docs/guides/client-libraries
+
 supabase_bp = Blueprint("supabase_bp", __name__)
 IMG_PATH = 'https://image.tmdb.org/t/p/w780'
 
@@ -16,7 +19,7 @@ def create_show():
         return {'data': data.data[0]}
     except Exception as e:
         error = str(e)
-        return {'error': error}
+        return {'error': error}, 500
 
 @supabase_bp.route("/list", methods=["GET"])
 def return_shows():
@@ -25,7 +28,7 @@ def return_shows():
         return {"data": data.data}
     except Exception as e:
         error = str(e)
-        return {"error": error}
+        return {"error": error}, 500
 
 @supabase_bp.route("/vote", methods=["POST"])
 @token_required
@@ -98,4 +101,65 @@ def vote_show():
         
     except Exception as e:
         error = str(e)
-        return {"error": error}
+        return {"error": error}, 500
+
+@supabase_bp.route("/comment", methods=["POST"])
+@token_required
+def add_comment():
+    try:
+
+        body = request.json
+        movie_id = body.get("movie_id")
+        comment = body.get("comment")
+
+        if movie_id is None or comment is None:
+            return {"error": "You must provide a movie_id and comment."}, 400
+
+        # get user_id from token
+        user_id = request.payload.get("sub")
+        token = request.token
+
+        # get user details
+        user = supabase.auth.api.get_user(jwt=token)
+        # get username from details
+        username = user.user_metadata.get("username")
+
+        # check if username is defined
+        if username is None:
+            # generate random username
+            username = generate_username(1)[0]
+            # update username in database
+            attributes = {"user_metadata": {"username":username}}
+            r = requests.put(f"{SUPABASE_URL}/auth/v1/admin/users/{user_id}", headers={"Authorization": f"Bearer {SUPABASE_KEY}", "apiKey": SUPABASE_KEY}, json=attributes)
+            r.raise_for_status()
+
+        # insert comment in database
+        data = supabase.table("comments").insert({"user_id": user_id, "movie_id": movie_id, "comment": comment, "username": username}).execute()
+        return {"data": data.data[0]}
+
+    except Exception as e:
+        error = str(e)
+        return {"error": error}, 500
+
+# Feature upgrade in progress
+
+# @supabase_bp.route("/watchlist", methods=["POST"])
+# @token_required
+# def add_to_watchlist():
+#     try:
+#         body = request.json
+#         movie_id = body.get("movie_id")
+        
+#         if movie_id is None:
+#             return {"error": "You must provide a movie_id."}, 400
+
+#         # get user_id from token
+#         user_id = request.payload.get("sub")
+
+#         data = supabase.table("watchlist").insert({"user_id": user_id, "movie_id": movie_id}).execute()
+#         return {"data": data.data[0]}
+
+#     except Exception as e:
+#         error = str(e)
+#         return {"error": error}, 500
+

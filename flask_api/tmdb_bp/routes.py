@@ -12,11 +12,6 @@ API_KEY = config.get("API_KEY")
 
 tmdb_bp = Blueprint("tmdb_bp", __name__)
 
-# https://supabase.com/blog/postgresql-views
-# users = supabase.auth.api.list_users()
-# for user in users:
-#     print(user.id, user.email, user.user_metadata)
-
 
 def fetch_tmdb(tmdb_api):
     '''Takes the tmdb url and returns the response from the TMDB API'''
@@ -133,11 +128,12 @@ def get_show_by_id(type, id):
         
         tmdb_response = fetch_show_by_type_id(type, id)
 
-        supabase_response = supabase.table("movies").select("*, votes(*)").eq('tmdb_id', id).execute()
+        supabase_response = supabase.table("movies").select("*, votes(*), comments(*)").eq('tmdb_id', id).execute()
         
-        return {"tmdb_response":tmdb_response,
-                "supabase_response": supabase_response.data[0] if len(supabase_response.data) > 0 else None
-                }
+        return {
+            "tmdb_response":tmdb_response,
+            "supabase_response": supabase_response.data[0] if len(supabase_response.data) > 0 else None
+        }
 
     except Exception as e:
         error = str(e)
