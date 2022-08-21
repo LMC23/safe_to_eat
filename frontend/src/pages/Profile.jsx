@@ -29,7 +29,7 @@ export default function Profile() {
                 You can pick your username:
             </label>
 
-            <div className="relative mt-1">
+            <div className="relative mt-1 flex flex-col gap-4">
                 <input
                     id="username"
                     className="w-full md:w-1/2 p-4 pr-12 text-sm border-gray-900 bg-gray-700 rounded-lg shadow-sm"
@@ -39,7 +39,7 @@ export default function Profile() {
                 />
 
 
-                <motion.button onClick={saveUsername} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="bg-yellow-300 p-4 rounded-md ml-4 text-gray-700 uppercase font-bold">Save</motion.button>
+                <motion.button onClick={saveUsername} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="mt-4 md:w-1/2 bg-yellow-300 p-4 rounded-md  text-gray-700 uppercase font-bold">Save</motion.button>
             </div>
         </div>
     </motion.div>

@@ -20,7 +20,7 @@ export default function Login() {
 
     const { error } = await signIn({ email, password });
 
-    if (error) return setError(error);
+    if (error) return setError(error.message);
 
     navigate("/");
   }
@@ -30,12 +30,12 @@ export default function Login() {
       <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} className="px-4 py-4 mx-auto sm:px-6 lg:px-8">
         <div className="max-w-lg mx-auto">
           <h1 className="text-2xl font-bold text-center sm:text-3xl text-yellow-300">
-            Get started today
+            Login
           </h1>
+          {error ? <div className="bg-rose-700 p-4 my-4 text-white rounded-2xl">{error}</div> : ''}
 
-          <p className="max-w-md mx-auto mt-4 text-center text-gray-500">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati
-            sunt dolores deleniti inventore quaerat mollitia?
+          <p className="max-w-md mx-auto mt-4 text-center text-gray-100">
+            If you want to contribute to our safety list, you must login in order to vote.
           </p>
 
           <form onSubmit={handleSubmit} className="p-8 mt-6 mb-0 space-y-4 rounded-lg shadow-2xl bg-slate-800 text-yellow-300">

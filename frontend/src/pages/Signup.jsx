@@ -7,20 +7,20 @@ export default function SignUp() {
   const emailRef = useRef();
   const passwordRef = useRef();
 
-  const [error, setError] = useState(null);
+  const [error, setError] = useState();
 
   const { signUp } = useAuth();
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
-
+    setError(null);
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
 
     const { error } = await signUp({ email, password });
 
-    if (error) return setError(error);
+    if (error) return setError(error.message);
 
     navigate("/");
   }
@@ -30,12 +30,12 @@ export default function SignUp() {
       <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} className="max-w-screen-xl px-4 py-4 mx-auto sm:px-6 lg:px-8">
         <div className="max-w-lg mx-auto">
           <h1 className="text-2xl font-bold text-center text-yellow-300 sm:text-3xl">
-            Get started today
+            Register
           </h1>
+          {error ? <div className="bg-rose-700 p-4 my-4 text-white rounded-2xl">{error}</div> : ''}
 
-          <p className="max-w-md mx-auto mt-4 text-center text-gray-500">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati
-            sunt dolores deleniti inventore quaerat mollitia?
+          <p className="max-w-md mx-auto mt-4 text-center text-gray-100">
+            If you want to contribute to our safety list, you must create an account in order to vote.
           </p>
 
           <form onSubmit={handleSubmit} className="p-8 mt-6 mb-0 space-y-4 rounded-lg shadow-2xl bg-slate-800 text-yellow-300 ">
