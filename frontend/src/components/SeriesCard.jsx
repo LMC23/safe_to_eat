@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { motion } from "framer-motion"
 const IMG_PATH = 'https://image.tmdb.org/t/p/w500'
 
-export default function SeriesCard({ series, isOnTmdb }) {
+export default function SeriesCard({ series }) {
 
     return (
         <Link className="flex flex-col justify-between md:flex-row rounded-lg bg-white hover:bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-900 dark:hover:bg-gray-600 shadow-md items-center my-2 pr-2"
@@ -17,7 +17,6 @@ export default function SeriesCard({ series, isOnTmdb }) {
                     <h5 className="text-white dark:text-dark-accent font-bold text-2xl tracking-tight mb-2">
                         {series.name}
                     </h5>
-                    <div>{isOnTmdb ? '✅' : '⛔'}</div>
                 </div>
                 <p className="font-normal text-gray-700 mb-3 dark:text-gray-200">
                     {

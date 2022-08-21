@@ -21,7 +21,7 @@ def create_show():
 @supabase_bp.route("/list", methods=["GET"])
 def return_shows():
     try:
-        data = supabase.table("movies").select("*").execute()
+        data = supabase.table("movies").select("*, votes(*)").execute()
         return {"data": data.data}
     except Exception as e:
         error = str(e)

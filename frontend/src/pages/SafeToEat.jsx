@@ -18,11 +18,22 @@ export default function SafeToEat() {
     console.log(data)
 
     if (data.data.length === 0) {
-        return <NoShows />
+        return <NoShows message="It seems nobody was hungry recently... " />
     }
 
     function isSafeToEat(show) {
-        return show.safe_to_eat
+        const localVotes = {
+            like: 0,
+            dislike: 0,
+        }
+        show.votes?.forEach(vote => {
+            if (vote.is_safe) {
+                localVotes.like += 1;
+            } else {
+                localVotes.dislike += 1;
+            }
+        })
+        return localVotes.like > localVotes.dislike
     }
 
     return (

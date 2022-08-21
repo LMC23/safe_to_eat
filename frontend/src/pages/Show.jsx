@@ -18,9 +18,13 @@ const fetchShowPageData = ({ type, id }) => {
     ])
 }
 
-const saveMovie = ({ accessToken, ...params }) => {
-    console.log(params)
-    const url = import.meta.env.VITE_API_URL + `/supabase/add_show`
+// const saveMovie = ({ accessToken, ...params }) => {
+//     const url = import.meta.env.VITE_API_URL + `/supabase/add_show`
+//     return axios.post(url, params, { headers: { token: accessToken } }).then(res => res.data)
+// }
+
+const voteShow = ({ accessToken, ...params }) => {
+    const url = import.meta.env.VITE_API_URL + `/supabase/vote`
     return axios.post(url, params, { headers: { token: accessToken } }).then(res => res.data)
 }
 
@@ -28,10 +32,11 @@ export default function Show() {
     const { id, type } = useParams();
     const { isLoading, error, data } = useQuery(["showData", { type, id }], () => fetchShowPageData({ type, id }));
     const { accessToken } = useAuth();
+    const { user } = useAuth();
 
     const queryClient = useQueryClient();
 
-    const mutation = useMutation(saveMovie, {
+    const mutation = useMutation(voteShow, {
         onSuccess: () => {
             // Invalidate and refetch
             console.log('success')
@@ -40,22 +45,55 @@ export default function Show() {
 
     })
 
-    function isSafeToEat(show) {
-        return show.safe_to_eat
+    function isSafeToEat(votes) {
+        return votes.like > votes.dislike
     }
 
-    function addMovieToDb(show) {
-        console.log(accessToken)
+    // function addMovieToDb(show) {
+    //     console.log(accessToken)
+    //     mutation.mutate({
+    //         accessToken,
+    //         "name": type === 'series' ? show.name : show.title,
+    //         "img_url": IMG_PATH + show.poster_path,
+    //         "mark": show.vote_average,
+    //         "description": show.overview,
+    //         "safe_to_eat": true,
+    //         "type": type,
+    //         "genre_ids": [],
+    //         "tmdb_id": show.id
+    //     })
+    // }
+
+    function getNbOfVotes(votes) {
+
+        const localVotes = {
+            like: 0,
+            dislike: 0,
+            your_vote: null
+        }
+        votes?.forEach(vote => {
+            if (vote.is_safe) {
+                localVotes.like += 1;
+            } else {
+                localVotes.dislike += 1;
+            }
+            if (user.id === vote.user_id) {
+                localVotes.your_vote = vote.is_safe;
+            }
+        })
+        return localVotes
+    }
+
+    function didUserVote(votes) {
+        return votes.your_vote !== null
+    }
+
+    function handleVoteShow(value, show) {
         mutation.mutate({
             accessToken,
-            "name": type === 'series' ? show.name : show.title,
-            "img_url": IMG_PATH + show.poster_path,
-            "mark": show.vote_average,
-            "description": show.overview,
-            "safe_to_eat": true,
-            "type": type,
-            "genre_ids": [],
-            "tmdb_id": show.id
+            tmdb_id: show.id,
+            type,
+            is_safe: value
         })
     }
 
@@ -65,6 +103,9 @@ export default function Show() {
 
     if (error) return "An error has occurred: " + error?.message;
     const [showInfo, castInfo] = data
+
+    const votes = getNbOfVotes(showInfo.supabase_response?.votes)
+    console.log(votes);
     return (
         <motion.div className="max-w-[780px] mx-auto" initial={{ opacity: 0, y: -30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }}>
 
@@ -74,8 +115,8 @@ export default function Show() {
 
 
             <div className="h-[300px]  mx-auto w-auto rounded-2xl overflow-hidden relative">
-                {showInfo.supabase_response ? <div className={`absolute bottom-0 left-0 rounded-tr-2xl p-4 ${isSafeToEat(showInfo.supabase_response) ? 'bg-teal-400' : 'bg-red-400'} text-gray-900 text-md font-bold`}>
-                    {isSafeToEat(showInfo.supabase_response) ? "🍿 Safe to eat" : "🤢 Not safe to eat"}
+                {votes.like + votes.dislike > 0 ? <div className={`absolute bottom-0 left-0 rounded-tr-2xl p-4 ${isSafeToEat(votes) ? 'bg-teal-400' : 'bg-red-400'} text-gray-900 text-md font-bold`}>
+                    {isSafeToEat(votes) ? "🍿 Safe to eat" : "🤢 Not safe to eat"}
                 </div> : <div className="absolute bottom-0 left-0 rounded-tr-2xl p-4 bg-yellow-300 text-gray-900 text-md font-bold">
                     🦄 Not yet rated
                 </div>}
@@ -120,30 +161,27 @@ export default function Show() {
             <div className="flex gap-2 mt-4 text-justify">
                 <span className="text-yellow-400 w-32 block font-bold">Your vote:</span>
                 <p className="text-gray-100 font-light w-full" >
-                    {showInfo.supabase_response?.liked ?
-                        <span >🍿🥤</span>
-                        :
-                        <span >🤢</span>
+                    {didUserVote(votes) ?
+                        isSafeToEat(votes) ?
+                            <span >🍿🥤</span>
+                            :
+                            <span >🤢</span>
+                        : '-'
                     }
                 </p>
             </div>
 
-
-            {/* <p className="mt-10 text-gray-100 text-xl text-center">Would you eat while watching this?</p>
+            <p className="mt-10 text-gray-100 text-xl text-center">
+                {didUserVote(votes) ? 'Looks like you already rated this. Changed your mind?' : 'Would you eat while watching this?'}
+            </p>
             <div className="p-6 mt-4 flex gap-10 justify-evenly">
-                <button className="w-1/3 bg-lime-600 text-gray-900 rounded-lg p-4 hover:opacity-95 cursor-pointer">🍿🥤</button>
-                <button className="w-1/3 bg-rose-700 text-gray-900 rounded-lg p-4 hover:opacity-95 cursor-pointer">🤢</button>
-            </div> */}
-
-            <p className="mt-10 text-gray-100 text-xl text-center">Looks like you already rated this. Changed your mind?</p>
-            <div className="p-6 mt-4 flex gap-10 justify-evenly">
-                <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="w-1/3 bg-lime-600 text-gray-900 rounded-lg p-4 hover:opacity-95 cursor-pointer">🍿🥤</motion.button>
-                <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="w-1/3 bg-rose-700 text-gray-900 rounded-lg p-4 hover:opacity-95 cursor-pointer">🤢</motion.button>
+                <motion.button onClick={() => handleVoteShow(true, showInfo.tmdb_response)} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="w-1/3 bg-lime-600 text-gray-900 rounded-lg p-4 hover:opacity-95 cursor-pointer">🍿🥤</motion.button>
+                <motion.button onClick={() => handleVoteShow(false, showInfo.tmdb_response)} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="w-1/3 bg-rose-700 text-gray-900 rounded-lg p-4 hover:opacity-95 cursor-pointer">🤢</motion.button>
             </div>
 
             <Comments />
 
-            {showInfo.supabase_response ? '' : <button className="p-4 bg-yellow-300" onClick={() => addMovieToDb(showInfo.tmdb_response)}>Add movie to db</button>}
+            {/* {showInfo.supabase_response ? '' : <button className="p-4 bg-yellow-300" onClick={() => addMovieToDb(showInfo.tmdb_response)}>Add movie to db</button>} */}
 
         </motion.div>
     )

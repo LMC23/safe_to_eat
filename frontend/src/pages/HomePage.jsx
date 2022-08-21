@@ -34,15 +34,15 @@ export default function Discover() {
   }, [])
 
   const { isLoading, error, data } = useQuery(["homePageData", searchTerm], () => fetchHomePageData(searchTerm));
-  const { isLoading: isLoadingSupabase, error: isErrorSupabase, data: dataSupabase } = useQuery(["fetchSupabase", searchTerm], () => fetchSupabase());
+  // const { isLoading: isLoadingSupabase, error: isErrorSupabase, data: dataSupabase } = useQuery(["fetchSupabase", searchTerm], () => fetchSupabase());
 
-  if (isLoading || isLoadingSupabase) return <Loader />;
+  if (isLoading) return <Loader />;
 
-  if (error || isErrorSupabase) return "An error has occurred: " + error.message;
+  if (error) return "An error has occurred: " + error.message;
 
   const [moviesData, seriesData] = data;
 
-  const usedTmdbIds = dataSupabase.data.map(item => item.tmdb_id)
+  // const usedTmdbIds = dataSupabase.data.map(item => item.tmdb_id)
 
 
 
@@ -87,11 +87,11 @@ export default function Discover() {
       </div>
       {type === 'movies' ? <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {moviesData.results.map(movie => {
-          return <MovieCard movie={movie} key={movie.id} isOnTmdb={usedTmdbIds.includes(movie.id)} />
+          return <MovieCard movie={movie} key={movie.id} />
         })}
       </div> : <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {seriesData.results.map(s => {
-          return <SeriesCard series={s} key={s.id} isOnTmdb={usedTmdbIds.includes(s.id)} />
+          return <SeriesCard series={s} key={s.id} />
         })}
       </div>}
       {/* <Pagination
