@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Loader from "../components/Loader";
 import { useAuth } from "../contexts/Auth";
 import Comments from "../components/Comments";
+import { motion } from "framer-motion"
 
 const IMG_PATH = 'https://image.tmdb.org/t/p/w780'
 
@@ -71,7 +72,7 @@ export default function Show() {
     const [showInfo, castInfo] = data
     console.log(castInfo)
     return (
-        <div className="max-w-[780px] mx-auto">
+        <motion.div className="max-w-[780px] mx-auto" initial={{ opacity: 0, y: -30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }}>
 
             <h5 className="text-gray-200 dark:text-dark-accent font-bold text-3xl tracking-tight mb-4 text-center">
                 {type === 'series' ? showInfo.tmdb_response.name : showInfo.tmdb_response.title}
@@ -142,14 +143,14 @@ export default function Show() {
 
             <p className="mt-10 text-gray-100 text-xl text-center">Looks like you already rated this. Changed your mind?</p>
             <div className="p-6 mt-4 flex gap-10 justify-evenly">
-                <button className="w-1/3 bg-lime-600 text-gray-900 rounded-lg p-4 hover:opacity-95 cursor-pointer">🍿🥤</button>
-                <button className="w-1/3 bg-rose-700 text-gray-900 rounded-lg p-4 hover:opacity-95 cursor-pointer">🤢</button>
+                <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="w-1/3 bg-lime-600 text-gray-900 rounded-lg p-4 hover:opacity-95 cursor-pointer">🍿🥤</motion.button>
+                <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="w-1/3 bg-rose-700 text-gray-900 rounded-lg p-4 hover:opacity-95 cursor-pointer">🤢</motion.button>
             </div>
 
             <Comments />
 
             {/* {showInfo.supabase_response ? '' : <button className="p-4 bg-yellow-300" onClick={addMovieToDb}>Add movie to db</button>} */}
 
-        </div>
+        </motion.div>
     )
 }

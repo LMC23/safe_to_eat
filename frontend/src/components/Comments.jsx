@@ -1,6 +1,8 @@
+import { useAuth } from "../contexts/Auth";
 import CommentsList from "./CommentsList";
 
 export default function Comments() {
+    const { user } = useAuth();
     return (
         <div className="mt-6">
             <div className="grid grid-cols-3 items-start">
@@ -12,6 +14,7 @@ export default function Comments() {
                 </div>
 
                 <button
+                    disabled={!user}
                     type="button"
                     className="
                             disabled:opacity-50
@@ -32,6 +35,7 @@ export default function Comments() {
                             focus:outline-none
                             focus:ring-2 focus:ring-offset-2
                             mb-4
+                            disabled:cursor-not-allowed
                             "
                 >
                     Send
@@ -39,6 +43,7 @@ export default function Comments() {
             </div>
 
             <textarea
+                disabled={!user}
                 className="
                         flex-1
                         appearance-none
@@ -55,6 +60,7 @@ export default function Comments() {
                         focus:border-transparent
                         disabled:bg-gray-200
                         bg-gray-100 border-gray-300 dark:bg-gray-800 dark:border-gray-900 dark:text-gray-100
+                        disabled:cursor-not-allowed
                 "
                 id="comment"
                 placeholder="Leave a comment..."

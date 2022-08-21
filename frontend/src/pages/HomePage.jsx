@@ -6,6 +6,7 @@ import Pagination from "../components/Pagination";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Loader from "../components/Loader";
 import { useStore } from "../contexts/Store";
+import { motion } from "framer-motion"
 
 
 const fetchHomePageData = (search) => {
@@ -47,7 +48,7 @@ export default function Discover() {
   }
 
   return (
-    <div>
+    <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}>
       <form className="relative" onSubmit={handleSearch}>
         <input
           type="text"
@@ -96,6 +97,6 @@ export default function Discover() {
         paginateFront={() => console.log('front')}
         currentPage={1}
       />
-    </div >
+    </motion.div >
   );
 }

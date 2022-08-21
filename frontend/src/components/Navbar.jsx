@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/Auth";
 
 export default function NavBar() {
@@ -63,7 +63,7 @@ export default function NavBar() {
                 <Link
                     key={route.path}
                     to={route.path}
-                    className=" md:justify-start hover:text-purple-100 flex-grow hover:bg-purple-200 flex items-center p-2 my-2 transition-colors dark:hover:bg-gray-800 dark:hover:text-dark-accent duration-200  text-gray-600 dark:text-gray-400 rounded-lg "
+                    className={` md:justify-start hover:text-purple-100 flex-grow hover:bg-purple-200 flex items-center p-2 my-2 transition-colors dark:hover:bg-gray-800 dark:hover:text-dark-accent duration-200  text-gray-600 dark:text-gray-400 rounded-lg ${location.pathname === route.path ? 'bg-gray-800' : ''}`}
                     href="#"
                 >
                     {route.svg}

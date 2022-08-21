@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-
+import { motion } from "framer-motion"
 import { useAuth } from "../contexts/Auth";
 
 export default function Login() {
@@ -27,9 +27,9 @@ export default function Login() {
 
   return (
     <>
-      <div className="max-w-screen-xl px-4 py-16 mx-auto sm:px-6 lg:px-8">
+      <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} className="px-4 py-4 mx-auto sm:px-6 lg:px-8">
         <div className="max-w-lg mx-auto">
-          <h1 className="text-2xl font-bold text-center text-indigo-600 sm:text-3xl">
+          <h1 className="text-2xl font-bold text-center sm:text-3xl text-yellow-300">
             Get started today
           </h1>
 
@@ -38,7 +38,7 @@ export default function Login() {
             sunt dolores deleniti inventore quaerat mollitia?
           </p>
 
-          <form onSubmit={handleSubmit} className="p-8 mt-6 mb-0 space-y-4 rounded-lg shadow-2xl bg-gray-300 text-indigo-700">
+          <form onSubmit={handleSubmit} className="p-8 mt-6 mb-0 space-y-4 rounded-lg shadow-2xl bg-slate-800 text-yellow-300">
             <p className="text-lg font-medium">Sign in to your account</p>
 
             <div>
@@ -50,7 +50,7 @@ export default function Login() {
                 <input
                   type="email"
                   id="email"
-                  className="w-full p-4 pr-12 text-sm border-gray-200 rounded-lg shadow-sm"
+                  className="w-full p-4 pr-12 text-sm border-gray-900 rounded-lg shadow-sm bg-gray-700"
                   placeholder="Enter email"
                   ref={emailRef}
                 />
@@ -83,29 +83,29 @@ export default function Login() {
                 <input
                   type="password"
                   id="password"
-                  className="w-full p-4 pr-12 text-sm border-gray-200 rounded-lg shadow-sm"
+                  className="w-full p-4 pr-12 text-sm border-gray-900 rounded-lg shadow-sm bg-gray-700"
                   placeholder="Enter password"
                   ref={passwordRef}
                 />
 
-               
+
               </div>
             </div>
 
             <button
               type="submit"
-              className="block w-full px-5 py-3 text-sm font-medium text-white bg-indigo-600 rounded-lg"
+              className="block w-full px-5 py-3 text-sm font-medium text-gray-900 bg-yellow-500 rounded-lg"
             >
               Sign in
             </button>
 
-            <p className="text-sm text-center text-gray-500">
+            <p className="text-sm text-center">
               No account?
               <Link to="/signup" className="underline ml-2">Sign Up</Link>
             </p>
           </form>
         </div>
-      </div>
+      </motion.div>
 
       {/* <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column'}}>
         <div>{error && JSON.stringify(error)}</div>
