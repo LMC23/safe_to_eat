@@ -1,10 +1,46 @@
+import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Loader from "./Loader";
 import { useAuth } from "../contexts/Auth";
-import CommentsList from "./CommentsList";
+import axios from 'axios'
 
-export default function Comments() {
-    const { user } = useAuth();
+const commentShow = ({ accessToken, ...params }) => {
+    console.log(params);
+    const url = import.meta.env.VITE_API_URL + `/supabase/comment`
+    return axios.post(url, params, { headers: { token: accessToken } }).then(res => res.data)
+}
+
+export default function Comments({ didUserVote, movieId }) {
+    const [comment, setComment] = useState('');
+    const { accessToken } = useAuth();
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation(commentShow, {
+        onSuccess: () => {
+            setComment('')
+            // Invalidate and refetch
+            queryClient.invalidateQueries(["showData"])
+        }
+
+    })
+
+    function handleComment() {
+        mutation.mutate({
+            accessToken,
+            movie_id: movieId,
+            comment
+        })
+
+    }
+
+    if (mutation.isLoading) return <Loader />;
+
+    if (mutation.isError) return "An error has occurred: " + mutation.error?.message;
+
+
     return (
         <div className="mt-6">
+
             <div className="grid grid-cols-3 items-start">
                 <div className="col-span-2">
                     <label
@@ -14,7 +50,7 @@ export default function Comments() {
                 </div>
 
                 <button
-                    disabled={!user}
+                    disabled={!didUserVote || comment.length === 0}
                     type="button"
                     className="
                             disabled:opacity-50
@@ -37,13 +73,15 @@ export default function Comments() {
                             mb-4
                             disabled:cursor-not-allowed
                             "
+                    onClick={() => handleComment()}
+
                 >
                     Send
                 </button>
             </div>
 
             <textarea
-                disabled={!user}
+                disabled={!didUserVote}
                 className="
                         flex-1
                         appearance-none
@@ -63,14 +101,15 @@ export default function Comments() {
                         disabled:cursor-not-allowed
                 "
                 id="comment"
-                placeholder="Leave a comment..."
+                placeholder={didUserVote ? "Leave a comment..." : "You need to vote first in order to comment."}
                 name="comment"
                 rows="5"
                 cols="40"
-                v-model="comment"
+                onChange={(e) => setComment(e.target.value)}
+                value={comment}
             >
             </textarea>
-            <CommentsList />
+
         </div >
     )
 }

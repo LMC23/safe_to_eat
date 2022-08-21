@@ -5,6 +5,7 @@ import Loader from "../components/Loader";
 import { useAuth } from "../contexts/Auth";
 import Comments from "../components/Comments";
 import { motion } from "framer-motion"
+import CommentsList from "../components/CommentsList";
 
 const IMG_PATH = 'https://image.tmdb.org/t/p/w780'
 
@@ -49,20 +50,7 @@ export default function Show() {
         return votes.like > votes.dislike
     }
 
-    // function addMovieToDb(show) {
-    //     console.log(accessToken)
-    //     mutation.mutate({
-    //         accessToken,
-    //         "name": type === 'series' ? show.name : show.title,
-    //         "img_url": IMG_PATH + show.poster_path,
-    //         "mark": show.vote_average,
-    //         "description": show.overview,
-    //         "safe_to_eat": true,
-    //         "type": type,
-    //         "genre_ids": [],
-    //         "tmdb_id": show.id
-    //     })
-    // }
+
 
     function getNbOfVotes(votes) {
 
@@ -85,7 +73,8 @@ export default function Show() {
     }
 
     function didUserVote(votes) {
-        return votes.your_vote !== null
+        console.log(votes);
+        return votes?.your_vote !== null
     }
 
     function handleVoteShow(value, show) {
@@ -175,13 +164,15 @@ export default function Show() {
                 {didUserVote(votes) ? 'Looks like you already rated this. Changed your mind?' : 'Would you eat while watching this?'}
             </p>
             <div className="p-6 mt-4 flex gap-10 justify-evenly">
-                <motion.button onClick={() => handleVoteShow(true, showInfo.tmdb_response)} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="w-1/3 bg-lime-600 text-gray-900 rounded-lg p-4 hover:opacity-95 cursor-pointer">🍿🥤</motion.button>
-                <motion.button onClick={() => handleVoteShow(false, showInfo.tmdb_response)} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="w-1/3 bg-rose-700 text-gray-900 rounded-lg p-4 hover:opacity-95 cursor-pointer">🤢</motion.button>
+                <motion.button disabled={!user} onClick={() => handleVoteShow(true, showInfo.tmdb_response)} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="w-1/3 bg-lime-600  rounded-lg p-4 hover:opacity-95 cursor-pointer text-white disabled:cursor-not-allowed disabled:bg-gray-400">🍿🥤 - {votes.like} vote(s)</motion.button>
+                <motion.button disabled={!user} onClick={() => handleVoteShow(false, showInfo.tmdb_response)} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="w-1/3 bg-rose-700 text-white rounded-lg p-4 hover:opacity-95 cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-400">🤢 - {votes.dislike} vote(s)</motion.button>
+
             </div>
 
-            <Comments />
 
-            {/* {showInfo.supabase_response ? '' : <button className="p-4 bg-yellow-300" onClick={() => addMovieToDb(showInfo.tmdb_response)}>Add movie to db</button>} */}
+            <Comments movieId={showInfo.supabase_response?.id} didUserVote={didUserVote(votes)} />
+            <CommentsList comments={showInfo.supabase_response?.comments} />
+
 
         </motion.div>
     )
