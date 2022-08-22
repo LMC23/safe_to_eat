@@ -4,6 +4,8 @@ A web site where you can check if a movie/series is not to gross to watch while 
 
 App hosted [here](https://safe2eat.netlify.app/)
 
+We had some problems deploying the python api to a hosting with ssl, so we used a nextjs proxy that forwards the requests to the htpp python api. ( we received that mixed content between netlify https and our server http ).
+
 ## List of team members
 
 [@LMC23](https://twitter.com/CristinaLapusn2)
